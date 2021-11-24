@@ -35,16 +35,40 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-                    </li>
+                    {% if not current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
 
         </nav>
     </header>
 
-    <main>
+    <main class="container">
+       {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for c, m in messages %}
+                    <div class="alert alert-{{ c }} alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>{{ m }}</strong> 
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+           
+
         {% block content %}
         {% endblock content %}
     </main>
@@ -64,6 +88,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    {{ moment.include_moment() }}
 </body>
 
 </html>
