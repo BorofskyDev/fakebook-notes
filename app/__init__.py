@@ -5,7 +5,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_moment import Moment
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -14,5 +13,8 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 moment = Moment(app)
 
+from app.blueprints.main import bp as main
+app.register_blueprint(main)
 
-from app import routes, models
+from app.blueprints.auth import bp as auth
+app.register_blueprint(auth)
