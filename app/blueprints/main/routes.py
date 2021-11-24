@@ -1,7 +1,9 @@
-from app import app, db
+from os import stat
+from . import bp as app
+from app import db
 from flask import request, render_template, url_for, redirect, flash
 from datetime import datetime
-from app.blueprints.auth import User
+from app.blueprints.auth.models import User
 from app.blueprints.main.models import Post
 from flask_login import login_user, logout_user, current_user
 
@@ -40,6 +42,6 @@ def create_new_post():
         flash('You have successfully created a new post.', 'success')
     else:
         flash('Empty messages not allowed. Please post something', 'warning')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 

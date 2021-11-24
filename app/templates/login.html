@@ -5,7 +5,7 @@
 <div>
     <h3>Login</h3>
     <hr>
-    <form action="{{ url_for('login') }}" method="post">
+    <form action="{{ url_for('auth.login') }}" method="post">
         <div class="form-group">
             <input type="email" name='email' class="form-control" placeholder="Email" />
             <input type="password" name='password' class="form-control" placeholder="Password" /> 

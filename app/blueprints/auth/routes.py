@@ -1,4 +1,6 @@
-from app import app, db
+from os import stat
+from . import bp as app
+from app import db
 from flask import request, render_template, url_for, redirect, flash
 from datetime import datetime
 from app.blueprints.auth.models import User
@@ -24,7 +26,7 @@ def register():
         db.session.add(u)
         db.session.commit()
         flash('User created successfully', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
     return render_template('register.html')
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
@@ -33,7 +35,7 @@ def login():
         if u is not None and u.check_password(request.form.get('password')):
             login_user(u)
             flash('You are now logged in', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('main.home'))
         else:
             flash('Your username or password is incorrect.', 'danger')
             return redirect (request.referrer)
@@ -44,4 +46,4 @@ def login():
 def logout():
     logout_user()
     flash('User logged out successfully', 'info')
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
