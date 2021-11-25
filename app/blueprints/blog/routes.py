@@ -27,3 +27,5 @@ def post(id):
         'post' : current_post
     }
     return render_template('post.html', **context)
+
+

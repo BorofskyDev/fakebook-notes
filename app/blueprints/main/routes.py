@@ -26,10 +26,45 @@ def about():
    
     return render_template('about.html')
 
-
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    u = User.query.get(current_user.get_id())
+    context = {
+        'posts': Post.query.filter_by(user_id=u.get_id()).order_by(Post.date_created.desc()).all()      
+    }
+        #thank you Miguel for your flask turtorial being online
+    if request.method == "POST":
+        f_name = request.form.get('f_name')
+        l_name = request.form.get('l_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+                #Bug fix for W5D2 Homework      
+        if not password and not confirm_password:
+            u.first_name = f_name
+            u.last_name = l_name
+            u.email = email
+            db.session.commit()
+            flash('Your profile has been successfully updated.', 'info')
+            return redirect(request.referrer)
+        else:
+            if password == confirm_password:
+                u.first_name = f_name
+                u.last_name = l_name
+                u.email = email
+                u.password = password
+                u.generate_password(u.password)
+                db.session.commit()
+                flash('Your profile has been successfully updated.', 'info')
+                return redirect(request.referrer) 
+            else: 
+                flash("Your passwords did not match. ", 'warning')
+                return redirect(request.referrer)
+    return render_template('profile.html', **context)
 
 @app.route('/new_post', methods=['POST'])
 def create_new_post():
