@@ -14,3 +14,4 @@ class Cart(db.Model):
     product_key = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     quantity = db.Column(db.Integer)
+#

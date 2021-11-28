@@ -28,7 +28,7 @@
                         <img class="img-responsive" src="{{ p.product.images[0] }}" alt="preview" height="80">
                     </div>
                     <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
-                        <h4 class="product-name"><strong>{{  p.product.name }}</strong></h4>
+                        <h4 class="product-name"><strong>{{ p.product.name }}</strong></h4>
                         <h4>
                             <small></small>
                         </h4>
@@ -39,41 +39,50 @@
                         </div>
                         <div class="col-4 col-sm-4 col-md-4">
                             <div class="quantity">
-                                <input type="number" step="1" max="99" min="1" value="{{ p.quantity }}" title="Qty" class="qty" size="4">
+                                <input type="number" step="1" max="99" min="1" value="{{ p.quantity }}" title="Qty"
+                                    class="qty" size="4">
                             </div>
                         </div>
-                        <div class="col-2 col-sm-2 col-md-2 text-right">
-                            <button type="button" class="btn btn-outline-danger btn-xs">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
+                        <!-- BEGIN DELETE FUNCTION -->
+                        <div class="card-footer">
+                            <div class="col-2 col-sm-2 col-md-2 float-right">
+                                <a href="{{ url_for('shop.delete') }} " type="button" class="btn btn-outline-danger btn-xs">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                                <!-- END DELETE FUNCTION -->
+                            </div>
                         </div>
                     </div>
                 </div>
                 <hr>
             {% endfor %}
-
+            <!-- BEGIN UPDATE FUNCTION -->
             <div class="pull-right">
-                <a href="" class="btn btn-outline-secondary pull-right">
+                <a href="" class="btn btn-outline-secondary pull-left">
                     Update Shopping Cart
                 </a>
             </div>
+            
         </div>
+            <!-- END UPDATE FUNCTION -->
 
-        <div class="card-footer">
-            <div class="text-right">
-                <div class="cart-totals">
-                    Subtotal: <b>0.00</b>
-                </div>
-                <div class="cart-totals">
-                    Tax: <b>0.00</b>
-                </div>
-                <div class="cart-totals">
-                    Grand total: <b>0.00</b>
+            <!-- BEGIN CART TOTALLING -->
+            <div class="card-footer">
+                <div class="text-right">
+                    <div class="cart-totals">
+                        <a href="{{ url_for('shop.subtotal') }}">Subtotal:</a>
+                    </div>
+                    <div class="cart-totals">
+                        Tax: <b>0.00</b>
+                    </div>
+                    <div class="cart-totals">
+                        Grand total: <b>0.00</b>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <!-- END CART TOTALLING -->
 
+    </div>
 </div>
 
 {% endblock content %}
