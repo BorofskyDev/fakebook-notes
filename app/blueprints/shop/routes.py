@@ -63,20 +63,30 @@ def delete():
 
 @shop.route('/cart/subtotal')
 def subtotal():
-    p = Product.query.get(request.args.get('price'))
-    c = Cart.query.get(request.args.get('quantity'))
-    pre_tax = 
-    return pre_tax
+    stripe.api_key = app.config.get('STRIPE_TEST_SK')
+    for i in Cart.query.filter_by(user_id=current_user.get_id()).all():
+        stripe_product = stripe.Product.retrieve(i.product_key)
+        # p = Product("price")
+        # p = float(Product.price)
+        p = stripe.Price.retrieve(stripe_product['metadata']['price_id'])
+        c = float(i.quantity)
+        # p = 15.99
+        # c = 5
+        print(p, c, type(p), type(c))
+        pre_tax = p * float(c)
+        print(pre_tax)
+        return redirect(url_for('shop.cart'))
 
-# @shop.route('/cart/grand_total')
-# def subtotal():
+
+# @shop.route('/cart/update')
+# def update_cart():
 #     stripe.api_key = app.config.get('STRIPE_TEST_SK')
-#     for i in Cart.query.filter_by(user_id=current_user.get_id()).all():
-#         stripe_product = stripe.Product.retrieve(i.product_key)
-#         subtotal = (
-#             stripe.Price.retrieve(stripe_product['metadata']['price_id']) * i.quantity
-#         )
-#         return subtotal
+#     cart = Cart.query.get(request.args.get('product_key'))
+#     for i in enumerate(cart):
+#         if i == Cart.product_key:
+#             cart["quantity"] = cart["quantity"] 
+
+
 
 
 @shop.route('/checkout', methods=['POST'])
@@ -95,13 +105,20 @@ def create_checkout_session():
         checkout_session = stripe.checkout.Session.create(
             line_items=items,
             mode='payment',
-            success_url='http://localhost:5000/',
-            cancel_url= 'http://localhost:5000'
+            success_url='http://localhost:5000/success',
+            cancel_url= 'http://localhost:5000/cancelled'
         )
     except Exception as error:
         return str(error)
     return redirect(checkout_session.url, code=303)
 
 
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
+
+@app.route("/cancelled")
+def cancelled():
+    return render_template("cancelled.html")
 
